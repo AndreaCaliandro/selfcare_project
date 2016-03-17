@@ -18,8 +18,8 @@ fh = open(os.path.join(sub_dir, filename), "r")
 
 "Input values:"
 #Patient file input values
-patient_parts = (4,1,8,6,1,8,2,8,2,8,1,1,1,21,2,8)
-patient_parts_number = len(patient_parts)
+patient_parts = (4,1,8,6,1,8,2,8,2,8,1,1,1,21,2,8) # lengths of the parts for this file
+patient_parts_number = len(patient_parts) # how many parts there are
 # counting the number of columns in the first row in an awful way
 ncol = 0
 count = 0
@@ -29,7 +29,7 @@ for line in fh:
         if count == 1:
             break
         
-#method that takes a line of maxcol total columns and splits it into (unequal) parts
+#general method that takes a line of maxcol total columns and splits it into (unequal) parts
 def slice_it(li, maxcol, parts):
     stop = 0
     start = 0
@@ -44,6 +44,7 @@ def slice_it(li, maxcol, parts):
 patient_fields = list()
 patient_keys = list()
 
+"First line splitted and appended to a list (only first line!)"
 count = 0
 for line in fh:
     print line
@@ -51,7 +52,7 @@ for line in fh:
         fields = patient_field.split()
         for field in fields:
             patient_fields.append(field)
-            print patient_fields
+    print patient_fields
 #            for field in patient_fields:
 #                patient_keys = field
 #                print patient_keys
