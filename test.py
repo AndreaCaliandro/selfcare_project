@@ -23,10 +23,10 @@ fh = open(os.path.join(sub_dir, filename), "r")
 patient_parts = (4,1,8,6,1,8,2,8,2,8,1,1,1,2,1,2,8) # lengths of the parts for this file
 patient_parts_number = len(patient_parts) # how many parts there are
 
-"Patient fields we want:"
+"fields we want:"
 patient_patid = list()
 
-"lines splitted and appended to a list: filling the patient fields we want"
+"lines splitted and appended to a list: filling the  fields we want"
 count = 0
 for line in fh:
 #    print line        
@@ -34,7 +34,7 @@ for line in fh:
 #    print patient_fields
     patient_patid.append(patient_fields[0])
 
-"printing the patient fields we want"    
+"printing the fields we want"    
 #print patient_patid
 
 " --------------------------------- MEDICAL FILE ----------------------------- "
@@ -47,11 +47,11 @@ fh = open(os.path.join(sub_dir, filename), "r")
 medical_parts = (4,8,8,2,7,1,4,1,1,3,2,7,1,1,1,1,1,4,4,8,1) # lengths of the parts for this file
 medical_parts_number = len(medical_parts) # how many parts there are
 
-"Patient fields we want:"
+"fields we want:"
 medical_patid = list()
 medical_medcode = list()
 
-"lines splitted and appended to a list: filling the patient fields we want"
+"lines splitted and appended to a list: filling the fields we want"
 count = 0
 for line in fh:
 #    print line        
@@ -60,7 +60,7 @@ for line in fh:
     medical_patid.append(medical_fields[0])
     medical_medcode.append(medical_fields[4])
 
-"printing the patient fields we want"    
+"printing the fields we want"    
 #print medical_medcode
 
 
@@ -74,7 +74,7 @@ fh = open(os.path.join(sub_dir, filename), "r")
 ahd_parts = (4,8,10,1,13,13,13,13,13,13,7,1,3,2,4,7,1,1,1,1,4,4,8,1) # lengths of the parts for this file
 ahd_parts_number = len(ahd_parts) # how many parts there are
 
-"Patient fields we want:"
+"fields we want:"
 ahd_patid = list()
 ahd_ahdcode = list()
 ahd_data1 = list()
@@ -85,7 +85,7 @@ ahd_data5 = list()
 ahd_data6 = list()
 ahd_medcode = list()
 
-"lines splitted and appended to a list: filling the patient fields we want"
+"lines splitted and appended to a list: filling the fields we want"
 count = 0
 for line in fh:
 #    print line        
@@ -101,7 +101,7 @@ for line in fh:
     ahd_data6.append(ahd_fields[9])       
     ahd_medcode.append(ahd_fields[10])
 
-"printing the patient fields we want"    
+"printing the fields we want"    
 print ahd_ahdcode
 
 
