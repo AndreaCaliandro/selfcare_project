@@ -12,6 +12,8 @@ import os
 #client = MongoClient()
 
 "Reading the data files:"
+
+" ----- PATIENT FILE -------- "
 filename = 'Patient_a0001.txt' 
 sub_dir = '/Users/pettorin/Dropbox/S2DS/selfcare/s2ds/PrimarySelfCare/primarycaredata/THINData'
 fh = open(os.path.join(sub_dir, filename), "r")
@@ -21,10 +23,6 @@ fh = open(os.path.join(sub_dir, filename), "r")
 patient_parts = (4,1,8,6,1,8,2,8,2,8,1,1,1,2,1,2,8) # lengths of the parts for this file
 patient_parts_number = len(patient_parts) # how many parts there are
 
-
-"Patient file"
-patient_fields = list()
-patient_keys = list()
 "Patient fields we want:"
 patid = list()
 
@@ -40,7 +38,7 @@ for line in fh:
 "printing the patient fields we want"    
 print patid
 
-
+" ----- MEDICAL FILE -------- "
     
 
 #testing
