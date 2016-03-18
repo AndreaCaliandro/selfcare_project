@@ -24,21 +24,45 @@ patient_parts = (4,1,8,6,1,8,2,8,2,8,1,1,1,2,1,2,8) # lengths of the parts for t
 patient_parts_number = len(patient_parts) # how many parts there are
 
 "Patient fields we want:"
-patid = list()
+patient_patid = list()
 
 "lines splitted and appended to a list: filling the patient fields we want"
 count = 0
 for line in fh:
-    print line
-        
+#    print line        
     patient_fields = [line[int(sum(patient_parts[:i])):sum(patient_parts[:i+1])].strip() for i in range(len(patient_parts))]
-    print patient_fields
-    patid.append(patient_fields[0])
+#    print patient_fields
+    patient_patid.append(patient_fields[0])
 
 "printing the patient fields we want"    
-print patid
+#print patient_patid
 
 " ----- MEDICAL FILE -------- "
+filename = 'Medical_a0001.txt' 
+sub_dir = '/Users/pettorin/Dropbox/S2DS/selfcare/s2ds/PrimarySelfCare/primarycaredata/THINData'
+fh = open(os.path.join(sub_dir, filename), "r")
+
+"Input values:"
+#Patient file input values
+medical_parts = (4,8,8,2,7,1,4,1,1,3,2,7,1,1,1,1,1,4,4,8,1) # lengths of the parts for this file
+medical_parts_number = len(medical_parts) # how many parts there are
+
+"Patient fields we want:"
+medical_patid = list()
+medical_medcode = list()
+
+"lines splitted and appended to a list: filling the patient fields we want"
+count = 0
+for line in fh:
+#    print line        
+    medical_fields = [line[int(sum(medical_parts[:i])):sum(medical_parts[:i+1])].strip() for i in range(len(medical_parts))]
+#    print medical_fields
+    medical_patid.append(medical_fields[0])
+    medical_medcode.append(medical_fields[4])
+
+"printing the patient fields we want"    
+print medical_medcode
+
     
 
 #testing
