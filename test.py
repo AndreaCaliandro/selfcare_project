@@ -29,9 +29,6 @@ for line in fh:
         if count == 1:
             break
 
-#Try this
-patient_fields = [line[int(sum(patient_parts[:i])):sum(patient_parts[:i+1])] for i in range(len(patient_parts))]
-
 
 #general method that takes a line of maxcol total columns and splits it into (unequal) parts
 def slice_it(li, maxcol, parts):
@@ -52,6 +49,13 @@ patient_keys = list()
 count = 0
 for line in fh:
     print line
+    
+    
+    #Try this. There are few differences in the final fields, but I think the problem is how the 'patient_parts' are defined
+    patient_fields_Andrea = [line[int(sum(patient_parts[:i])):sum(patient_parts[:i+1])].strip() for i in range(len(patient_parts))]
+    print patient_fields_Andrea
+
+    
     for patient_field in slice_it(line, ncol, patient_parts):
         fields = patient_field.split()
         for field in fields:
