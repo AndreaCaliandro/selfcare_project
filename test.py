@@ -13,7 +13,7 @@ import os
 
 "Reading the data files:"
 
-" ----- PATIENT FILE -------- "
+" -------------------------------- PATIENT FILE ------------------------------- "
 filename = 'Patient_a0001.txt' 
 sub_dir = '/Users/pettorin/Dropbox/S2DS/selfcare/s2ds/PrimarySelfCare/primarycaredata/THINData'
 fh = open(os.path.join(sub_dir, filename), "r")
@@ -37,7 +37,7 @@ for line in fh:
 "printing the patient fields we want"    
 #print patient_patid
 
-" ----- MEDICAL FILE -------- "
+" --------------------------------- MEDICAL FILE ----------------------------- "
 filename = 'Medical_a0001.txt' 
 sub_dir = '/Users/pettorin/Dropbox/S2DS/selfcare/s2ds/PrimarySelfCare/primarycaredata/THINData'
 fh = open(os.path.join(sub_dir, filename), "r")
@@ -64,7 +64,7 @@ for line in fh:
 #print medical_medcode
 
 
-" ----- AHD FILE -------- "
+" ------------------------------------ AHD FILE ------------------------------- "
 filename = 'Ahd_a0001.txt' 
 sub_dir = '/Users/pettorin/Dropbox/S2DS/selfcare/s2ds/PrimarySelfCare/primarycaredata/THINData'
 fh = open(os.path.join(sub_dir, filename), "r")
