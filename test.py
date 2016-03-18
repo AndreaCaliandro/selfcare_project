@@ -22,8 +22,7 @@ patient_parts = (4,1,8,6,1,8,2,8,2,8,1,1,1,2,1,2,8) # lengths of the parts for t
 patient_parts_number = len(patient_parts) # how many parts there are
 
 
-"Slicing lines:"
-# Patient file
+"Patient file"
 patient_fields = list()
 patient_keys = list()
 "Patient fields we want:"
@@ -34,8 +33,6 @@ count = 0
 for line in fh:
     print line
         
-    #Try this. There are few differences in the final fields, but I think the problem is how the 'patient_parts' are defined
-    # works now, thanks
     patient_fields = [line[int(sum(patient_parts[:i])):sum(patient_parts[:i+1])].strip() for i in range(len(patient_parts))]
     print patient_fields
     patid.append(patient_fields[0])
