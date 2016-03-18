@@ -28,7 +28,11 @@ for line in fh:
         ncol = len(line)
         if count == 1:
             break
-        
+
+#Try this
+patient_fields = [line[int(sum(patient_parts[:i])):sum(patient_parts[:i+1])] for i in range(len(patient_parts))]
+
+
 #general method that takes a line of maxcol total columns and splits it into (unequal) parts
 def slice_it(li, maxcol, parts):
     stop = 0
