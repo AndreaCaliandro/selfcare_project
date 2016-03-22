@@ -20,6 +20,9 @@ class THINdb:
         self.Readcodes()
         self.NHS()
         self.Comments()
+
+        self.PatientDic = {}
+        self.MedicalDic = {}
     #----------------------------------------#
 
 
@@ -86,7 +89,6 @@ class THINdb:
                 'deathdate','deathinfo','accept','institute',
                 'marital','dispensing','prscexempt','sysdate']
         fieldsize = [4,1,8,6,1,8,2,8,2,8,1,1,1,2,1,2,8]
-        self.PatientDic = {}
         with open(PatientFile) as fp:
             for line in fp:
                 fields = fieldsplit(line, fieldsize)
@@ -138,7 +140,6 @@ class THINdb:
                              'source','episode','nhsspec','locate','textid','category','priority',
                              'medinfo','inprac','private','medid','consultid','sysdate','modified']
         fieldsize = [4,8,8,2,7,1,4,1,1,3,2,7,1,1,1,1,1,4,4,8,1]
-        self.MedicalDic = {}
         with open(MedicalFile) as fp:
             for line in fp:
                 fields = fieldsplit(line, fieldsize)
