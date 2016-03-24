@@ -268,7 +268,11 @@ class THINdb:
         with open(AHD_File) as fp:
             for line in fp:
                 fields = fieldsplit(line, fieldsize)
-                datalist = self.AHDcodesDic[fields[2]][0]
+                try:
+                    datalist = self.AHDcodesDic[fields[2]][0]
+                except KeyError:
+                    print fields[2]
+                    break
                 self.AHD_Codes[4:4+len(datalist)] = datalist
                 #print self.AHD_Codes
                 self.AHD_Dic.setdefault(fields[0],{}).update({fields[20]:{fields[2]:{self.AHD_Codes[i]:fields[i] for i in range(len(self.AHD_Codes))}}})
