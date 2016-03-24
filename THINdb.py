@@ -8,7 +8,9 @@ dbfilepath = 'Dropbox/selfcare/s2ds/PrimarySelfCare/primarycaredata/THINData/'
 AnciliaryNames = {'LookupTables':'THINLookupsSample.txt',
                   'Readcodes':'ReadcodesSample.txt',
                   'NHSspec':'NHSspeciality.txt',
-                  'Comments':'THINCommentsSample.txt'}
+                  'Comments':'THINCommentsSample.txt',
+                  'AHDcodes':'AHDCodesSample.txt',
+                  'AHDlookups':'AHDLookups.txt'}
 
 
 class THINdb:
@@ -20,9 +22,12 @@ class THINdb:
         self.Readcodes()
         self.NHS()
         self.Comments()
-
+        self.AHDcodes()
+        self.AHDlookups()
+        
         self.PatientDic = {}
         self.MedicalDic = {}
+        self.AHD_Dic = {}
     #----------------------------------------#
 
 
@@ -58,6 +63,33 @@ class THINdb:
     #-----------------------------------------------------------------------------------------#
 
 
+    
+    def AHDcodes(self):
+        self.AHDcodesDic = {}
+        filepath = self.ancilirypath+'/'+AnciliaryNames['AHDcodes']
+        fieldsize = [8, 10, 100, 30, 30, 30, 30, 30, 30]
+        with open(filepath) as fp:
+            for line in fp:
+                fields = fieldsplit(line, fieldsize)
+                self.AHDcodesDic.update({fields[1]:[[fields[i] for i in range(3,len(fieldsize))],
+                                                    fields[0],fields[2]]})
+    #-----------------------------------------------------------------------------------------#
+
+
+    
+    def AHDlookups(self):
+        self.AHDlookupsDic = {}
+        filepath = self.ancilirypath+'/'+AnciliaryNames['AHDlookups']
+        fieldsize = [3, 30, 6, 100]
+        with open(filepath) as fp:
+            for line in fp:
+                fields = fieldsplit(line, fieldsize)
+                self.AHDlookupsDic.update({fields[2]:'%s - %s' %(fields[1],fields[3])})
+    #-----------------------------------------------------------------------------------------#
+
+
+    
+
     def Comments(self):    
         self.CommentsDic = {}
         filepath = self.ancilirypath+'/'+AnciliaryNames['Comments']
@@ -75,7 +107,10 @@ class THINdb:
             0: self.LookupTablesDic[code][codvalue] if self.LookupTablesDic.has_key(code) else '',
             1: self.MedcodeDic[codvalue] if self.MedcodeDic.has_key(codvalue) else '',
             2: self.NHSdic[codvalue] if self.NHSdic.has_key(codvalue) else codvalue,
-            3: self.CommentsDic[codvalue] if self.CommentsDic.has_key(codvalue) else ''
+            3: self.CommentsDic[codvalue] if self.CommentsDic.has_key(codvalue) else '',
+            4: self.AHDcodesDic[codvalue] if self.AHDcodesDic.has_key(codvalue) else '',
+            5: self.AHDlookupsDic[codvalue] if self.AHDlookupsDic.has_key(codvalue) else ''
+            #self.AHDlookupsDic[code] if self.AHDcodesDic.has_key(code) else ''
         }
         return switcher.get(ancnum)
     #-----------------------------------------------------------------------------------------#
@@ -134,7 +169,7 @@ class THINdb:
     
     def Medical(self, MedicalFile):
         "There are many records per patient as a new record is generated with each new 'event'"
-        "that is experienced by the patient."
+        "that is experienced by the patient. Each event has a unique pair (medid, datatype)"
 
         self.MedicalCodes = ['patid','eventdate','enddate','datatype','medcode','medflag','staffid',
                              'source','episode','nhsspec','locate','textid','category','priority',
@@ -204,26 +239,116 @@ class THINdb:
                        'sysdate':['System date',0],
                        'modified':['Flag to indicate if record has been edited by GP (Y/N)',0]}
 
-        #AnciliaryEnum = [self.LookupTablesDic, self.MedcodeDic, self.NHSdic, self.CommentsDic]
         Header = ['Field', 'key', 'value', 'Explanation']
         table = [Header]
         for code in self.MedicalCodes:
             codvalue = self.MedicalDic[patid][medid][datatype][code]
             if len(codvalue)>0:
-                #AncDic = AnciliaryEnum[CodeMeaning[code][1]]
                 ancnum = CodeMeaning[code][1]
                 row = [CodeMeaning[code][0],
                        code,
                        codvalue,
                        self.AnciliarySwitch(ancnum, code, codvalue)]
-                       #self.LookupTablesDic[code][codvalue] if self.LookupTablesDic.has_key(code) else '']
-                       #AncDic[code][codvalue] if AncDic.has_key(code) else '']
                 table.append(row)
         print PrettyPrint(table)
     #---------------------------------------------------------------------------------------------------------#
 
-    
 
+    def AHD(self, AHD_File):
+        "Read and decode the AHD files. There are several records for each patient"
+        "Each record has a unique pair (ahdid, ahdcode)"
+
+        self.AHD_Codes = ['patid','eventdate','ahdcode','ahdflag',
+                          'data1','data2','data3','data4' ,'data5','data6',
+                          'medcode','source','nhsspec','locate','staffid',
+                          'textid','category','ahdinfo','inprac','private',
+                          'ahdid','consultid','sysdate','modified']
+
+        fieldsize = [4,8,10,1,13,13,13,13,13,13,7,1,3,2,4,7,1,1,1,1,4,4,8,1]
+        with open(AHD_File) as fp:
+            for line in fp:
+                fields = fieldsplit(line, fieldsize)
+                datalist = self.AHDcodesDic[fields[2]][0]
+                self.AHD_Codes[4:4+len(datalist)] = datalist
+                #print self.AHD_Codes
+                self.AHD_Dic.setdefault(fields[0],{}).update({fields[20]:{fields[2]:{self.AHD_Codes[i]:fields[i] for i in range(len(self.AHD_Codes))}}})
+    #-----------------------------------------------------------------------------------------#
+
+
+    def HumanR_AHD(self, patid, ahdid=False, ahdcode=False):
+        if ahdid==False or ahdcode==False:
+            self.HumanR_AHD_patid(patid)
+        else: self.HumanR_AHD_table(patid, ahdid, ahdcode)
+    #---------------------------------------------------------------------------------------------------------#
+
+    
+    def HumanR_AHD_patid(self, patid):
+        "For each entry of the same patient print the eventdate, datatype, medid"
+
+        Header = ['eventdate', 'AHDcode', 'Datafile', 'Description', 'AHDid']
+        table = [Header]
+        for ahdid in self.AHD_Dic[patid].keys():
+            for ahdcode in self.AHD_Dic[patid][ahdid].keys():
+                dic = self.AHD_Dic[patid][ahdid][ahdcode]
+                row = [dic['eventdate'],
+                       dic['ahdcode'],
+                       self.AHDcodesDic[ahdcode][1],
+                       self.AHDcodesDic[ahdcode][2],
+                       dic['ahdid']]
+                table.append(row)
+        print PrettyPrint(table)
+        print 'Number of entries for Patient %s = %d' %(patid, len(table)-1)
+    #---------------------------------------------------------------------------------------------------------#
+
+      
+    def HumanR_AHD_table(self, patid, ahdid, ahdcode):
+        "Print in a human readable form the info contained in a Patient line"
+        
+        CodeMeaning = {'patid':['Patient identifier',0],
+                       'eventdate':['Event date',0],
+                       'ahdcode':['AHD code',4],
+                       'ahdflag':['Integrity flag',0],
+                       #'data1':[],'data2':[],'data3':[],'data4' :[],'data5':[],'data6':[],
+                       'medcode':['Medical code (anc. Readcodes)',1],
+                       'source':['Origin of record',0],
+                       'nhsspec':['Secondary care speciality',0],
+                       'locate':['Location',0],
+                       'staffid':['Clinician ID',0],
+                       'textid':['Link to anonymised free text comments',0],
+                       'category':['Category of medical entry',0],
+                       'ahdinfo':['AIS extra information',0],
+                       'inprac':['Event recorded in practice (Y/N)',0],
+                       'private':['Private (Y) or NHS (N) entries',0],
+                       'ahdid':['AHD record identifier (unique with adhcode)',0],
+                       'consultid':['Consult link to same medical/therapy consultation',0],
+                       'sysdate':['System date',0],
+                       'modified':['Flag to indicate if record had been edited by GP',0]}
+
+        datalist = self.AHDcodesDic[ahdcode][0]
+        self.AHD_Codes[4:4+len(datalist)] = datalist
+        for i in range(len(datalist)):
+            CodeMeaning.update({datalist[i]:[datalist[i],5]})
+        #print datalist
+        Header = ['Field', 'key', 'value', 'Explanation']
+        table = [Header]
+        for code in self.AHD_Codes:
+            codvalue = self.AHD_Dic[patid][ahdid][ahdcode][code]
+            if len(codvalue)>0:
+                ancnum = CodeMeaning[code][1]
+                #print code, codvalue, ancnum
+                row = [CodeMeaning[code][0],
+                       code,
+                       codvalue,
+                       self.AnciliarySwitch(ancnum, code, codvalue)]
+                if ancnum == 4:
+                    row[3] = '%s - %s' %(row[3][1], row[3][2])
+                table.append(row)
+        print PrettyPrint(table)
+    #---------------------------------------------------------------------------------------------------------#
+
+
+
+    
     
 def fieldsplit(line, fieldsize):
     "Return a list of the string splitted in fields of fixed number of characters defined by fieldsize"
