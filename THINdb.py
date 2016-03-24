@@ -265,17 +265,21 @@ class THINdb:
                           'ahdid','consultid','sysdate','modified']
 
         fieldsize = [4,8,10,1,13,13,13,13,13,13,7,1,3,2,4,7,1,1,1,1,4,4,8,1]
+        missingcodes = []
         with open(AHD_File) as fp:
             for line in fp:
                 fields = fieldsplit(line, fieldsize)
                 try:
                     datalist = self.AHDcodesDic[fields[2]][0]
                 except KeyError:
-                    print fields[2]
+                    if (fields[2] in missingcodes)==False:
+                        missingcodes.append(fields[2])
                     continue
                 self.AHD_Codes[4:4+len(datalist)] = datalist
                 #print self.AHD_Codes
                 self.AHD_Dic.setdefault(fields[0],{}).update({fields[20]:{fields[2]:{self.AHD_Codes[i]:fields[i] for i in range(len(self.AHD_Codes))}}})
+        print 'Missing %d AHDcodes' %len(missingcodes)
+        print 'Missing AHDcodes: ', missingcodes
     #-----------------------------------------------------------------------------------------#
 
 
