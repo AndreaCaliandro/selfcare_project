@@ -272,7 +272,7 @@ class THINdb:
                     datalist = self.AHDcodesDic[fields[2]][0]
                 except KeyError:
                     print fields[2]
-                    break
+                    continue
                 self.AHD_Codes[4:4+len(datalist)] = datalist
                 #print self.AHD_Codes
                 self.AHD_Dic.setdefault(fields[0],{}).update({fields[20]:{fields[2]:{self.AHD_Codes[i]:fields[i] for i in range(len(self.AHD_Codes))}}})
