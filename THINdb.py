@@ -25,9 +25,9 @@ class THINdb:
         self.AHDcodes()
         self.AHDlookups()
         
-        self.PatientDic = {}
-        self.MedicalDic = {}
-        self.AHD_Dic = {}
+        #self.PatientDic = {}
+        #self.MedicalDic = {}
+        #self.AHD_Dic = {}
     #----------------------------------------#
 
 
@@ -118,7 +118,8 @@ class THINdb:
     
     def Patient(self, PatientFile):
         "Read and decode the Patient files. There is only one record for each patient"
-
+        
+        self.PatientDic = {}
         self.PatientCodes =['patid','patflag', 'yob','famnum','sex',
                 'regdate','regstat', 'xferdate','regrea',
                 'deathdate','deathinfo','accept','institute',
@@ -168,9 +169,10 @@ class THINdb:
 
     
     def Medical(self, MedicalFile):
-        "There are many records per patient as a new record is generated with each new 'event'"
-        "that is experienced by the patient. Each event has a unique pair (medid, datatype)"
+        """There are many records per patient as a new record is generated with each new 'event'
+        that is experienced by the patient. Each event has a unique pair (medid, datatype)"""
 
+        self.MedicalDic = {}
         self.MedicalCodes = ['patid','eventdate','enddate','datatype','medcode','medflag','staffid',
                              'source','episode','nhsspec','locate','textid','category','priority',
                              'medinfo','inprac','private','medid','consultid','sysdate','modified']
@@ -255,9 +257,10 @@ class THINdb:
 
 
     def AHD(self, AHD_File):
-        "Read and decode the AHD files. There are several records for each patient"
-        "Each record has a unique pair (ahdid, ahdcode)"
-
+        """Read and decode the AHD files. There are several records for each patient
+        Each record has a unique pair (ahdid, ahdcode)"""
+        
+        self.AHD_Dic = {}   
         self.AHD_Codes = ['patid','eventdate','ahdcode','ahdflag',
                           'data1','data2','data3','data4' ,'data5','data6',
                           'medcode','source','nhsspec','locate','staffid',
