@@ -232,7 +232,7 @@ all_patient_cv_data.update(new_patients002_cv_data)
 with open('all_patients_cvrisk_factors.json', 'w') as f:
     json.dump(all_patients_cvrisk_factors, f)
 
-with open('all_patient_cv_data', 'w') as f:
+with open('all_patient_cv_data.json', 'w') as f:
     json.dump(all_patient_cv_data, f)
 
 
